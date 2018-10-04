@@ -53,5 +53,11 @@ module Sidekiq
         end
       end
     end
+
+    # override existing log to include the arguments passed to `perform`
+    def self.job_hash_context(job_hash)
+      klass = job_hash['wrapped'] || job_hash["class"]
+      "#{klass} #{" args: #{job_hash['args']}" if job_hash['args']} JID-#{job_hash['jid']}#{" BID-#{job_hash['bid']}" if job_hash['bid']}"
+    end
   end
 end
